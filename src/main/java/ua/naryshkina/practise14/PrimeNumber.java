@@ -1,51 +1,50 @@
 package ua.naryshkina.practise14;
 
+import java.util.concurrent.*;
+
 public class PrimeNumber {
+
     public static void main(String[] args) {
-        int[] numbers = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
+        int[] numbers = {2, 5, 7, 10, 13, 17, 20, 23, 29, 31};
 
-        // Создание потоков
-        Thread thread1 = new Thread(() -> {
-            int count = countPrimes(numbers, 0, numbers.length / 2);
-            System.out.println("Thread 1 counted: " + count);
-        });
+        // Создаем пул потоков
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        Thread thread2 = new Thread(() -> {
-            int count = countPrimes(numbers, numbers.length / 2, numbers.length);
-            System.out.println("Thread 2 counted: " + count);
-        });
-
-        // Запуск потоков
-        thread1.start();
-        thread2.start();
+        // Создаем задачи для подсчета простых чисел в каждом потоке
+        Future<Integer> future1 = executorService.submit(() -> countPrimeNumbers(numbers, 0, numbers.length / 2));
+        Future<Integer> future2 = executorService.submit(() -> countPrimeNumbers(numbers, numbers.length / 2, numbers.length));
 
         try {
-            // Ожидаем завершения потоков
-            thread1.join();
-            thread2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            // Получаем результаты выполнения задач
+            int count1 = future1.get();
+            int count2 = future2.get();
 
-        // Вывод общего количества простых чисел
-        int totalPrimes = countPrimes(numbers, 0, numbers.length);
-        System.out.println("Total prime numbers: " + totalPrimes);
+            // Суммируем результаты
+            int totalCount = count1 + count2;
+
+            // Выводим результат
+            System.out.println("Общее количество простых чисел: " + totalCount);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            // Завершаем работу пула потоков
+            executorService.shutdown();
+        }
     }
 
-    // Метод для подсчета простых чисел в заданном диапазоне массива
-    private static int countPrimes(int[] numbers, int start, int end) {
+    private static int countPrimeNumbers(int[] numbers, int start, int end) {
         int count = 0;
         for (int i = start; i < end; i++) {
             if (isPrime(numbers[i])) {
                 count++;
             }
         }
+        System.out.println("Поток " + Thread.currentThread().getId() + ": " + count + " простых чисел.");
         return count;
     }
 
-    // Метод для проверки, является ли число простым
     private static boolean isPrime(int number) {
-        if (number <= 1) {
+        if (number < 2) {
             return false;
         }
         for (int i = 2; i <= Math.sqrt(number); i++) {
