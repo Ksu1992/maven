@@ -11,7 +11,7 @@ public class GsonBox {
                     "color": "black",
                     "max-lifting-capacity": {
                         "unit": "kg",
-                        "value": 150
+                        "value": 170
                     },
                     "cargo": {
                         "name": "electronics",

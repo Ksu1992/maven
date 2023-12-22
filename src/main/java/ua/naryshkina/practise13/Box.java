@@ -9,10 +9,10 @@ public class Box {
     @SerializedName("max-lifting-capacity")
     private MaxLiftingCapacity maxLiftingCapacity;
 
-    private Cargo cargo;
-
     @SerializedName("delivery-date")
     private String deliveryDate;
+
+    private Cargo cargo;
 
     // Геттеры и сеттеры
 
@@ -22,31 +22,36 @@ public class Box {
                 "from='" + from + '\'' +
                 ", material='" + material + '\'' +
                 ", color='" + color + '\'' +
-                ", maxLiftingCapacity=" + maxLiftingCapacity + '\'' +
-                ", cargo=" + cargo + '\'' +
+                ", maxLiftingCapacity=" + maxLiftingCapacity +
                 ", deliveryDate='" + deliveryDate + '\'' +
+                ", cargo=" + cargo +
                 '}';
     }
 
     static class MaxLiftingCapacity {
-
+        private String unit;
+        private int value;
 
         @Override
         public String toString() {
             return "{" +
-                    "unit='" + "kg" + '\'' +
-                    ", value=" + 150 +
+                    "unit='" + unit + '\'' +
+                    ", value=" + value +
                     '}';
         }
     }
 
     static class Cargo {
+        private String name;
+
+        @SerializedName("class")
+        private String clazz;
 
         @Override
         public String toString() {
             return "{" +
-                    "name='" + "electronics" + '\'' +
-                    ", clazz='" + "C-1" + '\'' +
+                    "name='" + name + '\'' +
+                    ", clazz='" + clazz + '\'' +
                     '}';
         }
     }
