@@ -11,6 +11,8 @@ public class CsvBuilder {
             Scanner scanner = new Scanner(System.in);
             String input;
 
+            boolean firstElementInLine = true; // Флаг для определения первого элемента в строке
+
             while (true) {
                 System.out.println("Введите текст (введите 'next' для перехода на новую строку, 'end' для завершения): ");
                 input = scanner.nextLine();
@@ -19,9 +21,15 @@ public class CsvBuilder {
                     break;
                 } else if (input.equals("next")) {
                     writer.write("\n");
+                    firstElementInLine = true; // После перехода на новую строку снова первый элемент
                 } else {
+                    if (!firstElementInLine) {
+                        writer.write(", "); // Разделитель, если не первый элемент в строке
+                    } else {
+                        firstElementInLine = false;
+                    }
+
                     writer.write(input);
-                    writer.write(",");
                 }
             }
 
@@ -31,4 +39,5 @@ public class CsvBuilder {
         }
     }
 }
+
 
